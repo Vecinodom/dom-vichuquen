@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOM Vecino | Municipalidad de Vichuquén</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.css"/>
+
+<link rel="stylesheet" href="style.css" />
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x8hnn5rzpy");
+  </script>
+
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="topbar">
+  <div class="container nav">
+    <a href="https://www.munivichuquen.cl/" target="_blank" class="brand">
+      <img src="./img/logomuni.png" alt="Municipalidad de Vichuquén" class="brand-logo-img">
+    </a>
+
+    <nav class="menu">
+      <a href="#inicio">Inicio</a>
+      <a href="#beneficios">Información</a>
+      <a href="#certificados">Certificados</a>
+      <a href="#preparar-solicitud">Preparar solicitud</a>
+      <a href="#documentos">Documentos</a>
+      <a href="#faq">Preguntas frecuentes</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+   
+  </div>
+</header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <span class="eyebrow" id="heroEyebrow"></span>
+        <h1 id="heroTitulo"></h1>
+        <h2 id="heroSubtitulo"></h2>
+        <p id="heroDescripcion"></p>
+
+        <div class="hero-actions">
+          <a class="btn btn-accent btn-lg" id="heroBoton" href="https://domenlinea.minvu.cl/" target="_blank">
+            Ingresar a DOM en Línea
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-indicators" id="heroIndicadores"></div>
+      </div>
+    </div>
+  </section>
+<section id="video" class="section video-section">
+  <div class="container video-grid">
+    <div class="video-box">
+      <video controls preload="metadata">
+        <source src="https://youtu.be/9Ax1FYudthE" type="video/mp4">
+        Tu navegador no soporta el video.
+      </video>
+    </div>
+    
+
+    <div class="video-info">
+      <span class="section-kicker">Transformación digital</span>
+      <h2>Conoce DOM en Línea</h2>
+      <p>
+        Video informativo sobre la plataforma DOM en Línea y su funcionamiento,
+  orientado a facilitar el acceso digital a trámites y certificados de la
+  Dirección de Obras Municipales.
+      </p>
+
+      <a class="btn btn-accent" href="https://domenlinea.minvu.cl/" target="_blank">
+        Ir a DOM en Línea
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+  
+
+  <!-- LISTADO DE CERTIFICADOS -->
+  <section class="section" id="certificados">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Servicios disponibles</span>
+        <h2>Certificados disponibles</h2>
+      </div>
+     
+    </div>
+
+    <div class="accordion" id="certificadosAccordion"></div>
+  </div>
+</section>
+ <!-- FORMULARIO DE SOLICITUD -->
+<section class="section" id="preparar-solicitud">
+  <div class="container">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Asistente ciudadano</span>
+        <h2>Preparar solicitud paso a paso</h2>
+        <p class="section-desc">Este formulario corresponde al <strong>Certificado de Informaciones Previas (CIP)</strong>, documento oficial que entrega las normas urbanísticas aplicables a un predio.</p>
+      </div>
+    </div>
+
+    <div class="flujo-pasos">
+      <div class="flujo-paso activo" id="pasoUbicacion">1. Seleccionar ubicación</div>
+      <div class="flujo-paso" id="pasoFormulario">2. Completar datos</div>
+      <div class="flujo-paso" id="pasoPdf">3. Descargar PDF</div>
+    </div>
+
+    <div class="solicitud-grid solicitud-grid-flujo">
+      <div class="solicitud-card solicitud-card-principal" id="tarjetaUbicacion">
+        <span class="paso-etiqueta">Paso 1</span>
+        <h3>Ubicación del predio</h3>
+        <p class="form-help">
+          Primero busca la dirección o marca el punto directamente en el mapa. Con esta información se completarán automáticamente la calle, número, localidad y coordenadas del formulario.
+        </p>
+
+        <div class="map-search">
+          <input type="text" id="buscarDireccion" placeholder="Ej: Ingresa una dirección, calle o camino" />
+          <button type="button" class="btn btn-accent" id="btnBuscarMapa">
+            Buscar
+          </button>
+        </div>
+
+        <div id="mapaPredio"></div>
+
+        <div class="coordenadas-box">
+          <strong>Coordenadas seleccionadas:</strong>
+          <p id="coordenadasTexto">Aún no se ha seleccionado una ubicación.</p>
+          <p id="estadoUbicacion" class="estado-flujo pendiente">Seleccione una ubicación para continuar con el formulario.</p>
+
+        </div>
+
+        <div class="limites-box" id="limitesBox">
+          <div class="limites-header">
+            <span class="limites-icon">⬡</span>
+            <strong>Deslindes del predio</strong>
+            <span class="limites-badge sin-limites" id="limitesBadge">Sin demarcar</span>
+          </div>
+          <p class="limites-ayuda">Use la herramienta <strong>Polígono</strong> o <strong>Rectángulo</strong> de la barra lateral del mapa para demarcar los deslindes del predio.</p>
+
+          <!-- Mini-mapa de previsualización de deslindes -->
+          <div id="limitesMiniMapaWrap" style="display:none">
+            <div class="limites-minimap-label">
+              <span>📐</span> Vista previa de deslindes demarcados
+            </div>
+            <div id="limitesMiniMapa" class="limites-minimap"></div>
+            <p id="limitesTexto" class="limites-info"></p>
+          </div>
+
+          <div class="limites-footer" id="limitesSinDemarcar">
+            <p id="limitesTextoPendiente" class="limites-info-pendiente">Aún no se han demarcado los deslindes en el mapa.</p>
+          </div>
+
+          <button type="button" class="btn btn-outline btn-sm" id="btnLimpiarLimites" style="display:none">
+            🗑 Borrar deslindes
+          </button>
+        </div>
+
+        <input type="hidden" id="limitesPropiedad">
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="btnConfirmarUbicacion">
+            Usar esta ubicación y completar datos
+          </button>
+        </div>
+      </div>
+
+      <form id="solicitudForm" class="solicitud-card formulario-solicitud">
+        <span class="paso-etiqueta">Paso 2</span>
+        
+        <h3>Datos del solicitante</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre completo <span class="campo-requerido">*</span></label>
+            <input type="text" id="nombre" placeholder="Ej: Juan Pérez González">
+          </div>
+
+          <div class="form-group">
+            <label>RUT <span class="campo-requerido">*</span></label>
+            <input type="text" id="rut" placeholder="Ej: 12.345.678-9">
+          </div>
+
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="email" placeholder="correo@ejemplo.cl">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" id="telefono" placeholder="Ej:  9 1234 5678">
+          </div>
+        </div>
+
+        <h3>Datos de la propiedad</h3>
+        <p class="form-help aviso-autocompletado">
+          Estos datos se completan desde el mapa. Revísalos y corrige manualmente si la dirección no queda exacta.
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de zona</label>
+            <select id="zona">
+              <option value="">Seleccionar</option>
+              <option value="urbano">Urbano</option>
+              <option value="rural">Rural</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Calle o camino <span class="campo-requerido">*</span></label>
+            <input type="text" id="calle" placeholder="Se completará desde el mapa">
+          </div>
+
+          <div class="form-group">
+            <label>Número <span class="campo-requerido">*</span></label>
+            <input type="text" id="numero" placeholder="Se completará si el mapa lo encuentra">
+
+            <label class="check-sn">
+            <input type="checkbox" id="sinNumero">
+                  Predio sin número / S.N.
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Departamento</label>
+            <input type="text" id="depto" placeholder="Opcional">
+          </div>
+
+          <div class="form-group">
+            <label>Block</label>
+            <input type="text" id="block" placeholder="Opcional">
+          </div>
+
+          <div class="form-group">
+            <label>Manzana</label>
+            <input type="text" id="manzana" placeholder="Opcional">
+          </div>
+
+          <div class="form-group">
+            <label>Lote</label>
+            <input type="text" id="lote" placeholder="Opcional">
+          </div>
+
+          <div class="form-group">
+            <label>Loteo o localidad</label>
+            <input type="text" id="localidad" placeholder="Se completará desde el mapa">
+          </div>
+
+          <div class="form-group">
+            <label>Plano de loteo N°</label>
+            <input type="text" id="planoLoteo" placeholder="Opcional">
+          </div>
+
+          <div class="form-group">
+            <label>Rol SII <span class="campo-requerido">*</span></label>
+            <input type="text" id="rolSii" placeholder="Ej: 123-45" required>
+          </div>
+        </div>
+
+        <p class="leyenda-requerido"><span class="campo-requerido">*</span> Campos obligatorios</p>
+
+        <input type="hidden" id="latitud">
+        <input type="hidden" id="longitud">
+
+        <div id="consentimientoContainer"></div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-accent" id="btnGuardarDatos" disabled>
+            Validar datos
+          </button>
+
+          <button type="button" class="btn btn-accent" id="btnGenerarPdf" disabled>
+            Descargar formulario PDF
+          </button>
+
+          <button type="button" class="btn btn-outline" id="btnImprimirPdf" disabled>
+            Imprimir formulario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+  <!-- DOCUMENTOS  DE APOYO-->
+  <section class="section" id="documentos">
+    <div class="container mini-cards">
+      <article class="mini-card">
+        <div class="mini-icon blue">📋</div>
+        <h3>Paso a paso</h3>
+        <p>Guía simple para orientar al usuario antes de iniciar el trámite.</p>
+        <a class="mini-btn blue-btn" href="./img/pasos.jpg" target="_blank">Ver paso a paso</a>
+      </article>
+
+      <article class="mini-card">
+        <div class="mini-icon orange">📄</div>
+        <h3>Formularios Oficiales</h3>
+        <p>Sección para formularios o formatos descargables según el trámite.</p>
+        <a class="mini-btn orange-btn" href="https://www.minvu.gob.cl/elementos-tecnicos/formularios/0-certificados-y-otros/" target="_blank">Formularios MINVU</a>
+      </article>
+
+      <article class="mini-card">
+        <div class="mini-icon teal">🔐</div>
+        <h3>Recupera Clave Única</h3>
+        <p>Recuerda: todos estos trámites se realizan con tu ClaveÚnica</p>
+        <a class="mini-btn teal-btn" href="https://claveunica.gob.cl/recuperar" target="_blank">Recupera ClaveÚnica</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container faq-grid">
+      <div class="panel">
+        <div class="section-heading inside">
+          <div>
+            <span class="section-kicker">Ayuda ciudadana</span>
+            <h2>Preguntas frecuentes</h2>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Qué es DOM en Línea?</button>
+          <div class="faq-answer">
+            Es la plataforma digital para gestionar certificados y trámites asociados a la Dirección de Obras Municipales.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Para qué sirve esta página?</button>
+          <div class="faq-answer">
+            Permite orientar a los usuarios, agilizar procesos y facilitar la solicitud de certificados municipales antes de ingresar a la plataforma oficial.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Cómo lo uso?</button>
+          <div class="faq-answer">
+            Selecciona el certificado, revisa los requisitos, prepara tus antecedentes y luego accede a la plataforma oficial.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Qué necesito para solicitar un certificado?</button>
+          <div class="faq-answer">
+            Normalmente se solicita rol de avalúo, dirección del predio, croquis de ubicación, Dominio Vigente, Copia Escritura
+            y otros antecedentes según el certificado.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Los plazos son exactos?</button>
+          <div class="faq-answer">
+            No. Los plazos son referenciales y pueden variar según revisión municipal,
+            complejidad del caso y cantidad de solicitudes.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Dónde ingreso el trámite?</button>
+          <div class="faq-answer">
+            El ingreso se realiza en la plataforma oficial DOM en Línea del MINVU.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">¿Puedo revisar primero los requisitos?</button>
+          <div class="faq-answer">
+            Sí. Esta página está pensada justamente para orientar antes de entrar
+            a la plataforma oficial.
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <span class="section-kicker dark">Acceso directo</span>
+        <h2>Ingresa ahora a DOM en Línea</h2>
+        <p>
+          Cuando ya tengas identificado tu certificado y los antecedentes requeridos,
+          ingresa a la plataforma oficial.
+        </p>
+        <a class="btn btn-accent btn-lg" href="https://domenlinea.minvu.cl/" target="_blank">
+          Acceder a DOM en Línea
+        </a>
+
+        <div class="cta-tags">
+          <span>Rol de avalúo</span>
+          <span>Croquis</span>
+          <span>Documentos digitalizados</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contacto">
+    <div class="container footer-grid">
+      <div>
+        <h4>Dirección de Obras</h4>
+        <p>Municipalidad de Vichuquén</p>
+        <p>Dirección Arturo Prat  #90</p>
+        <p>Teléfono: +(56) 44 292 4966</p>
+      </div>
+      <div>
+        <h4>Plataforma</h4>
+        <p>DOM en Línea MINVU</p>
+      </div>
+      <div>
+        <h4>Acceso</h4>
+        <p class="link-texto">
+          Ingresar directamente aquí:
+          <a href="https://domenlinea.minvu.cl/" target="_blank">DOM en Línea</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-minvu">
+      <img src="./img/logo_minvu.png" alt="Ministerio de Vivienda y Urbanismo - Gobierno de Chile" class="footer-minvu-logo" />
+    </div>
+  </footer>
+
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
